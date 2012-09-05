@@ -36,7 +36,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-ietf-xml2rfc-template-06" ipr="trust200902">
+<rfc category="exp" docName="draft-prodromou-dialback-00" ipr="trust200902">
  <!-- category values: std, bcp, info, exp, and historic
     ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
        or pre5378Trust200902
@@ -49,41 +49,41 @@
    <!-- The abbreviated title is used in the page header - it is only necessary if the 
         full title is longer than 39 characters -->
 
-   <title abbrev="Abbreviated Title">Put Your Internet Draft Title
-   Here</title>
+   <title abbrev="Dialback Authentication">HTTP Authentication: Dialback Access Authentication</title>
 
    <!-- add 'role="editor"' below for the editors if appropriate -->
 
    <!-- Another author who claims to be an editor -->
 
-   <author fullname="Elwyn Davies" initials="E.B." role="editor"
-           surname="Davies">
-     <organization>Folly Consulting</organization>
+   <author fullname="Evan Prodromou" initials="E.S.P." role="editor"
+           surname="Prodromou">
+     <organization>StatusNet, Inc.</organization>
 
      <address>
        <postal>
-         <street></street>
+         <street>1124 rue Marie-Anne Est #32</street>
 
          <!-- Reorder these if your country does things differently -->
 
-         <city>Soham</city>
+         <city>Montreal</city>
 
-         <region></region>
+         <region>Quebec</region>
 
-         <code></code>
+         <code>H2J 2B5</code>
 
-         <country>UK</country>
+         <country>CA</country>
        </postal>
 
-       <phone>+44 7889 488 335</phone>
+       <phone>+1 855-946-3675 x700</phone>
 
-       <email>elwynd@dial.pipex.com</email>
+       <email>evan@status.net</email>
 
-       <!-- uri and facsimile elements may also be added -->
+       <uri>http://evan.status.net/</uri>
+
      </address>
    </author>
 
-   <date year="2010" />
+   <date year="2012" />
 
    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
         in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -103,7 +103,11 @@
 	 If this element is not present, the default is "Network Working Group",
         which is used by the RFC Editor as a nod to the history of the IETF. -->
 
-   <keyword>template</keyword>
+   <keyword>http</keyword>
+   <keyword>dialback</keyword>
+   <keyword>authentication</keyword>
+   <keyword>hostmeta</keyword>
+   <keyword>webfinger</keyword>
 
    <!-- Keywords will be incorporated into HTML output
         files in a meta tag but they have no effect on text or nroff
@@ -111,8 +115,9 @@
         keywords will be used for the search engine. -->
 
    <abstract>
-     <t>Insert an abstract: MANDATORY. This template is for creating an
-     Internet Draft.</t>
+     <t>This specification defines the Dialback Access Authentication
+     Scheme. It allows HTTP clients to identify an Internet host or account
+     responsible for a request.</t>
    </abstract>
  </front>
 
