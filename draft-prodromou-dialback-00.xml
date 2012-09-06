@@ -161,11 +161,11 @@
         <t hangText="webfinger">The webfinger value provided in the original Authorization header.</t>
         <t hangText="token">The token provided in the original Authorization header.</t>
         <t hangText="url">The URL that the original request was made to.</t>
-        <t hangText="date">The Date header on the original request. If there was no Date header, this should be omitted.</t>
+        <t hangText="date">The Date header on the original request.</t>
       </list>
       </t>
 
-      <t>One of "host" or "webfinger" is required. "token" and "url" are required.</t>
+      <t>One of "host" or "webfinger" is required. "token", "url" and "date" are required.</t>
 
     </section>
 
