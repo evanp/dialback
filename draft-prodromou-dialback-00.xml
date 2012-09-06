@@ -120,7 +120,7 @@
       </section>
 
     </section>
- 
+    
     <section title="Authentication scheme">
 
       <t>This spec adds a new Authorization type, "Dialback".</t>
@@ -182,12 +182,83 @@
 
       <section title="Host authentication">
 
+        <t>
+          <list style="symbols">
+            <t>The client sends an HTTP request with an Authorization header:
+            <figure align="left" anchor="host_authorization">
+<artwork><![CDATA[
+POST /some/endpoint HTTP/1.1
+Host: photo.example
+Date: Tue, 28 Aug 2012 09:41:21 -0400
+Content-Type: application/x-www-url-form-encoded
+Authorization: Dialback
+               host="checkin.example",
+               token="4430086d"
+
+arg1=186&arg2=50
+]]></artwork>
+            </figure>
+            </t>
+            <t>The server checks that the Date: header is within an acceptable window (+/- 5 minutes recommended).</t>
+            <t>The server checks that it hasn't seen this (host, url, token, date) tuple before.</t>
+            <t>The server discovers a dialback confirmation endpoint at checkin.example. Its rel type is "dialback".</t>
+            <t>The server posts an HTTP request to confirm the token:
+            <figure align="left" anchor="host_dialback">
+<artwork><![CDATA[
+POST /dialback HTTP/1.1
+Host: checkin.example
+Date: Tue, 28 Aug 2012 09:41:43 -0400
+Content-Type: application/x-www-url-form-encoded
+
+host=checkin.example&\
+token=4430086d&\
+url=http://photo.example/some/endpoint&\
+date=Tue%2C%2028%20Aug%202012%2009%3A41%3A21%20-0400
+]]></artwork>
+            </figure>
+            Note: the "\" character is used here to indicate the line wrapping in the request content and is not part of the content itself.</t>
+            <t>checkin.example returns 200 OK for a confirmation, 4xx for confirmation failure, 5xx for server failure.</t>
+          </list>
+        </t>
       </section>
 
       <section title="Webfinger authentication">
+        <t>
+          <list style="symbols">
+            <t>The client sends an HTTP request with an Authorization header:
+            <figure align="left" anchor="webfinger_authorization">
+<artwork><![CDATA[
+GET /some/resource HTTP/1.1
+Host: photo.example
+Date: Tue, 28 Aug 2012 09:41:21 -0400
+Authorization: Dialback 
+               webfinger="alice@checkin.example",
+               token="b3265cd5"
+]]></artwork>
+            </figure>
+            </t>
+            <t>The server checks that the Date: header is within an acceptable window (+/- 5 minutes recommended).</t>
+            <t>The server checks that it hasn't seen this (webfinger, url, token, date) tuple before.</t>
+            <t>The server discovers a dialback confirmation endpoint for alice@checkin.example. Its rel type is "dialback".</t>
+            <t>The server posts an HTTP request to confirm the token:
+            <figure align="left" anchor="webfinger_dialback">
+<artwork><![CDATA[
+POST /dialback HTTP/1.1
+Host: checkin.example
+Date: Tue, 28 Aug 2012 09:41:43 -0400
+Content-Type: application/x-www-url-form-encoded
 
+webfinger=alice@checkin.example&\
+token=b3265cd5&\
+url=http://photo.example/some/resource&\
+date=Tue%2C%2028%20Aug%202012%2009%3A41%3A21%20-0400
+]]></artwork>
+            </figure>
+            Note: the "\" character is used here to indicate the line wrapping in the request content and is not part of the content itself.</t>
+            <t>checkin.example returns 200 OK for a confirmation, 4xx for confirmation failure, 5xx for server failure.</t>
+          </list>
+        </t>
       </section>
-
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -203,12 +274,13 @@
         <t>This specification defines a new link relation type to be registered at 
         http://www.iana.org/assignments/link-relations.</t>
 
-        <list style="symbols">
-          <t>Relation Name: dialback</t>
-          <t>Description: a dialback token verification endpoint</t>
-          <t>Reference: (this document)</t>
-        </list> 
-        
+        <t>
+          <list style="symbols">
+            <t>Relation Name: dialback</t>
+            <t>Description: a dialback token verification endpoint</t>
+            <t>Reference: (this document)</t>
+          </list> 
+        </t>
       </section>
 
     </section>
