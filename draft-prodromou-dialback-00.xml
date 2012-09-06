@@ -1,69 +1,41 @@
 <?xml version="1.0" encoding="US-ASCII"?>
-<!-- This template is for creating an Internet Draft using xml2rfc,
-    which is available here: http://xml.resource.org. -->
-<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
-<!-- One method to get references from the online citation libraries.
-    There has to be one entity for each item to be referenced. 
-    An alternate method (rfc include) is described in the references. -->
 
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
 <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY RFC5226 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml">
+<!ENTITY RFC2616 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml">
+<!ENTITY RFC2617 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml">
+<!ENTITY RFC5849 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml">
+<!ENTITY RFC5988 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml">
 ]>
+
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<!-- used by XSLT processors -->
-<!-- For a complete list and description of processing instructions (PIs), 
-    please see http://xml.resource.org/authoring/README.html. -->
-<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
-    (Here they are set differently than their defaults in xml2rfc v1.32) -->
 <?rfc strict="yes" ?>
-<!-- give errors regarding ID-nits and DTD validation -->
-<!-- control the table of contents (ToC) -->
 <?rfc toc="yes"?>
-<!-- generate a ToC -->
 <?rfc tocdepth="4"?>
-<!-- the number of levels of subsections in ToC. default: 3 -->
-<!-- control references -->
 <?rfc symrefs="yes"?>
-<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
 <?rfc sortrefs="yes" ?>
-<!-- sort the reference entries alphabetically -->
-<!-- control vertical white space 
-    (using these PIs as follows is recommended by the RFC Editor) -->
 <?rfc compact="yes" ?>
-<!-- do not start each main section on a new page -->
 <?rfc subcompact="no" ?>
-<!-- keep one blank line between list items -->
-<!-- end of list of popular I-D processing instructions -->
+
 <rfc category="exp" docName="draft-prodromou-dialback-00" ipr="trust200902">
- <!-- category values: std, bcp, info, exp, and historic
-    ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
-       or pre5378Trust200902
-    you can add the attributes updates="NNNN" and obsoletes="NNNN" 
-    they will automatically be output with "(if approved)" -->
 
  <!-- ***** FRONT MATTER ***** -->
 
  <front>
-   <!-- The abbreviated title is used in the page header - it is only necessary if the 
-        full title is longer than 39 characters -->
 
    <title abbrev="Dialback Authentication">HTTP Authentication: Dialback Access Authentication</title>
 
-   <!-- add 'role="editor"' below for the editors if appropriate -->
-
-   <!-- Another author who claims to be an editor -->
-
    <author fullname="Evan Prodromou" initials="E.S.P." role="editor"
            surname="Prodromou">
+
      <organization>StatusNet, Inc.</organization>
 
      <address>
        <postal>
          <street>1124 rue Marie-Anne Est #32</street>
-
-         <!-- Reorder these if your country does things differently -->
 
          <city>Montreal</city>
 
@@ -85,23 +57,9 @@
 
    <date year="2012" />
 
-   <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
-        in the current day for you. If only the current year is specified, xml2rfc will fill 
-	 in the current day and month for you. If the year is not the current one, it is 
-	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
-	 purpose of calculating the expiry date).  With drafts it is normally sufficient to 
-	 specify just the year. -->
-
-   <!-- Meta-data Declarations -->
-
    <area>General</area>
 
    <workgroup>Internet Engineering Task Force</workgroup>
-
-   <!-- WG name at the upperleft corner of the doc,
-        IETF is fine for individual submissions.  
-	 If this element is not present, the default is "Network Working Group",
-        which is used by the RFC Editor as a nod to the history of the IETF. -->
 
    <keyword>http</keyword>
    <keyword>dialback</keyword>
@@ -109,22 +67,50 @@
    <keyword>hostmeta</keyword>
    <keyword>webfinger</keyword>
 
-   <!-- Keywords will be incorporated into HTML output
-        files in a meta tag but they have no effect on text or nroff
-        output. If you submit your draft to the RFC Editor, the
-        keywords will be used for the search engine. -->
-
    <abstract>
+
      <t>This specification defines the Dialback Access Authentication
-     Scheme. It allows HTTP clients to identify an Internet host or account
-     responsible for a request.</t>
+     Scheme. It provides a way for HTTP clients to identify an
+     Internet host or account responsible for an HTTP request, and for
+     HTTP servers to verify that identity by sending a shared secret
+     to a declared dialback endpoint.</t>
+
+     <t>The specification defines a new HTTP authentication scheme,
+     "Dialback". It also defines a new link relation, "dialback", to
+     specify the endpoint for the dialback verification. Finally, it
+     defines the interface for the dialback endpoint.</t>
+
    </abstract>
+
  </front>
 
  <middle>
+
    <section title="Introduction">
-     <t>The original specification of xml2rfc format is in <xref
-     target="RFC2629">RFC&nbsp;2629</xref>.</t>
+
+     <t><xref target="RFC2616">HTTP/1.1</xref> has an extensible
+     authentication mechanism using the "Authorization" header. <xref
+     target="RFC2617">Basic and Digest Authentication</xref> are two
+     authentication schemes for HTTP/1.1. <xref target="RFC5849">OAuth
+     1.0</xref> is another.</t>
+
+     <t>All of these authentication schemes assume that the HTTP
+     server is able to validate the authentication credentials. With
+     distributed publishing and social networking applications,
+     however, the security domain may be separate from the resource
+     domain. In addition, the resource and security domains may have
+     no previously-negotiated relationship.</t>
+
+     <t>With dialback authentication, an HTTP client can authenticate
+     as a host or Webfinger address without creating a previous
+     relationship. The HTTP server verifies the identity using a
+     dialback endpoint specified by the host or Webfinger address.</t>
+
+     <t>Because dialback authentication requires one or more
+     additional requests from server to client, its intended use is
+     for bootstrapping longer-term relationships, such as dynamic
+     registration of OAuth clients. It can also be useful for single
+     use requests.</t>
 
      <section title="Requirements Language">
        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -132,189 +118,80 @@
        document are to be interpreted as described in <xref
        target="RFC2119">RFC 2119</xref>.</t>
      </section>
+
    </section>
 
-   <section anchor="simple_list" title="Simple List">
-     <t>List styles: 'empty', 'symbols', 'letters', 'numbers', 'hanging',
-     'format'.</t>
+   <section title="Authentication scheme">
 
-     <t><list style="symbols">
-         <t>First bullet</t>
+     <t>This spec adds a new Authorization type, "Dialback".</t>
 
-         <t>Second bullet</t>
-       </list> You can write text here as well.</t>
-   </section>
+     <t>The header has the following optional elements:
 
-   <section title="Figures">
-     <t>Figures should not exceed 69 characters wide to allow for the indent
-     of sections.</t>
+     <list hangIndent="8" style="hanging">
+          <t hangText="host">The host authorizing the request.</t>
+          <t hangText="webfinger">The webfinger account authorizing the request.</t>
+          <t hangText="nonce">An opaque value used to confirm the request authorization</t>
+     </list>
+     </t>
+ 
+     <t>Exactly one of "host" or "webfinger" is required.</t>
 
-     <figure align="center" anchor="xml_happy">
-       <preamble>Preamble text - can be omitted or empty.</preamble>
+     <t>"nonce" is always required.</t>
 
-       <artwork align="left"><![CDATA[
-+-----------------------+
-| Use XML, be Happy :-) |
-|_______________________|
-           ]]></artwork>
+     <section title="Replay prevention">
 
-       <postamble>Cross-references allowed in pre- and postamble. <xref
-       target="min_ref" />.</postamble>
-     </figure>
+       <t>To prevent replay attacks, the server has to reject the
+       request if it's already seen the same (host | webfinger, nonce,
+       date) tuple.</t>
 
-     <t>The CDATA means you don't need to escape meta-characters (especially
-     &lt;&nbsp;(&amp;lt;) and &amp;&nbsp;(&amp;amp;)) but is not essential.
-     Figures may also have a title attribute but it won't be displayed unless
-     there is also an anchor. White space, both horizontal and vertical, is
-     significant in figures even if you don't use CDATA.</t>
-   </section>
+       <t>To keep from having to save billions of tuples until the end
+       of time, it's reasonable to reject requests with a Date:
+       outside a fixed window. +/- 5 minutes from server time is
+       what's recommended for OAuth.</t>
 
-   <!-- This PI places the pagebreak correctly (before the section title) in the text output. -->
-
-   <?rfc needLines="8" ?>
-
-   <section title="Subsections and Tables">
-     <section title="A Subsection">
-       <t>By default 3 levels of nesting show in table of contents but that
-       can be adjusted with the value of the "tocdepth" processing
-       instruction.</t>
      </section>
 
-     <section title="Tables">
-       <t>.. are very similar to figures:</t>
-
-       <texttable anchor="table_example" title="A Very Simple Table">
-         <preamble>Tables use ttcol to define column headers and widths.
-         Every cell then has a "c" element for its content.</preamble>
-
-         <ttcol align="center">ttcol #1</ttcol>
-
-         <ttcol align="center">ttcol #2</ttcol>
-
-         <c>c #1</c>
-
-         <c>c #2</c>
-
-         <c>c #3</c>
-
-         <c>c #4</c>
-
-         <c>c #5</c>
-
-         <c>c #6</c>
-
-         <postamble>which is a very simple example.</postamble>
-       </texttable>
-     </section>
    </section>
 
-   <section anchor="nested_lists" title="More about Lists">
-     <t>Lists with 'hanging labels': the list item is indented the amount of
-     the hangIndent: <list hangIndent="8" style="hanging">
-         <t hangText="short">With a label shorter than the hangIndent.</t>
+   <section title="Link relation">
 
-         <t hangText="fantastically long label">With a label longer than the
-         hangIndent.</t>
+     <t>The server receiving the request uses hostmeta (for hosts) or
+     webfinger (for webfingers) to discover a link with type
+     "dialback".</t>
 
-         <t hangText="vspace_trick"><vspace blankLines="0" />Forces the new
-         item to start on a new line.</t>
-       </list></t>
+     <t>This link is an URL that can handle dialback requests.</t>
 
-     <!-- It would be nice to see the next piece (12 lines) all on one page. -->
-
-     <?rfc needLines="12" ?>
-
-     <t>Simulating more than one paragraph in a list item using
-     &lt;vspace&gt;: <list style="letters">
-         <t>First, a short item.</t>
-
-         <t>Second, a longer list item.<vspace blankLines="1" /> And
-         something that looks like a separate pararaph..</t>
-       </list></t>
-
-     <t>Simple indented paragraph using the "empty" style: <list
-         hangIndent="10" style="empty">
-         <t>The quick, brown fox jumped over the lazy dog and lived to fool
-         many another hunter in the great wood in the west.</t>
-       </list></t>
-
-     <section title="Numbering Lists across Lists and Sections">
-       <t>Numbering items continuously although they are in separate
-       &lt;list&gt; elements, maybe in separate sections using the "format"
-       style and a "counter" variable.</t>
-
-       <t>First list: <list counter="reqs" hangIndent="4" style="format R%d">
-           <t>#1</t>
-
-           <t>#2</t>
-
-           <t>#3</t>
-         </list> Specify the indent explicitly so that all the items line up
-       nicely.</t>
-
-       <t>Second list: <list counter="reqs" hangIndent="4" style="format R%d">
-           <t>#4</t>
-
-           <t>#5</t>
-
-           <t>#6</t>
-         </list></t>
-     </section>
-
-     <section title="Where the List Numbering Continues">
-       <t>List continues here.</t>
-
-       <t>Third list: <list counter="reqs" hangIndent="4" style="format R%d">
-           <t>#7</t>
-
-           <t>#8</t>
-
-           <t>#9</t>
-
-           <t>#10</t>
-         </list> The end of the list.</t>
-     </section>
    </section>
 
-   <section anchor="codeExample"
-            title="Example of Code or MIB Module To Be Extracted">
-     <figure>
-       <preamble>The &lt;artwork&gt; element has a number of extra attributes
-       that can be used to substitute a more aesthetically pleasing rendition
-       into HTML output while continuing to use the ASCII art version in the
-       text and nroff outputs (see the xml2rfc README for details). It also
-       has a "type" attribute. This is currently ignored except in the case
-       'type="abnf"'. In this case the "artwork" is expected to contain a
-       piece of valid Augmented Backus-Naur Format (ABNF) grammar. This will
-       be syntax checked by xml2rfc and any errors will cause a fatal error
-       if the "strict" processing instruction is set to "yes". The ABNF will
-       also be colorized in HTML output to highlight the syntactic
-       components. Checking of additional "types" may be provided in future
-       versions of xml2rfc.</preamble>
+   <section title="Dialback verification endpoint">
 
-       <artwork><![CDATA[
+     <t>To confirm, the server makes an HTTP POST request to the dialback endpoint.</t>
 
-/**** an example C program */
+     <t>The HTTP request has the following parameters:
 
-#include <stdio.h>
+     <list hangIndent="8" style="hanging">
+       <t hangText="host">The host value provided in the original Authorization header.</t>
+       <t hangText="webfinger">The webfinger value provided in the original Authorization header.</t>
+       <t hangText="nonce">The nonce provided in the original Authorization header.</t>
+       <t hangText="url">The URL that the original request was made to.</t>
+       <t hangText="date">The Date header on the original request. If there was no Date header, this should be omitted.</t>
+     </list>
+     </t>
 
-void
-main(int argc, char *argv[])
-{
-   int i;
+     <t>One of "host" or "webfinger" is required. "nonce" and "url" are required.</t>
 
-   printf("program arguments are:\n");
-   for (i = 0; i < argc; i++) {
-       printf("%d: \"%s\"\n", i, argv[i]);
-   }
+   </section>
 
-   exit(0);
-} /* main */
+   <section title="Examples">
 
-/* end of file */
+   <section title="Host authentication">
 
-           ]]></artwork>
-     </figure>
+   </section>
+
+   <section title="Webfinger authentication">
+
+   </section>
+
    </section>
 
    <section anchor="Acknowledgements" title="Acknowledgements">
@@ -363,6 +240,11 @@ main(int argc, char *argv[])
      <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
      &RFC2119;
 
+     &RFC2616;
+
+     &RFC2617;
+
+
      <reference anchor="min_ref">
        <!-- the following is the minimum to make xml2rfc happy -->
 
@@ -387,45 +269,16 @@ main(int argc, char *argv[])
 
      &RFC5226;
 
+     &RFC5849;
+
+     &RFC5988;
+
      <!-- A reference written by by an organization not a person. -->
 
-     <reference anchor="DOMINATION"
-                target="http://www.example.com/dominator.html">
-       <front>
-         <title>Ultimate Plan for Taking Over the World</title>
-
-         <author>
-           <organization>Mad Dominators, Inc.</organization>
-         </author>
-
-         <date year="1984" />
-       </front>
-     </reference>
    </references>
 
    <section anchor="app-additional" title="Additional Stuff">
      <t>This becomes an Appendix.</t>
    </section>
-
-   <!-- Change Log
-
-v00 2006-03-15  EBD   Initial version
-
-v01 2006-04-03  EBD   Moved PI location back to position 1 -
-                     v3.1 of XMLmind is better with them at this location.
-v02 2007-03-07  AH    removed extraneous nested_list attribute,
-                     other minor corrections
-v03 2007-03-09  EBD   Added comments on null IANA sections and fixed heading capitalization.
-                     Modified comments around figure to reflect non-implementation of
-                     figure indent control.  Put in reference using anchor="DOMINATION".
-                     Fixed up the date specification comments to reflect current truth.
-v04 2007-03-09 AH     Major changes: shortened discussion of PIs,
-                     added discussion of rfc include.
-v05 2007-03-10 EBD    Added preamble to C program example to tell about ABNF and alternative 
-                     images. Removed meta-characters from comments (causes problems).
-
-v06 2010-04-01 TT     Changed ipr attribute values to latest ones. Changed date to
-                     year only, to be consistent with the comments. Updated the 
-                     IANA guidelines reference from the I-D to the finished RFC.  -->
  </back>
 </rfc>
