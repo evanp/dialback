@@ -9,6 +9,7 @@
 <!ENTITY RFC2617 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml">
 <!ENTITY RFC5849 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml">
 <!ENTITY RFC5988 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml">
+<!ENTITY RFC6415 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6415.xml">
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -140,13 +141,18 @@
 
     </section>
 
-    <section title="Link relation">
+    <section title="Dialback endpoint discovery">
 
-      <t>The server receiving the request uses hostmeta (for hosts) or
-      webfinger (for webfingers) to discover a link with type
-      "dialback".</t>
+      <t>To validate the token, the server must identify a dialback
+      endpoint for the host or Webfinger address.</t>
 
-      <t>This link is an URL that can handle dialback requests.</t>
+      <t>For a host parameter, the server SHOULD use <xref
+      target="RFC6415">Web Host Metadata</xref> to find the
+      endpoint. It will have the link relation "dialback".</t>
+
+      <t>For a webfinger parameter, the server SHOULD use <xref
+      target="RFC6415">Web Host Metadata</xref> to find the
+      endpoint with the link relation "dialback".</t>
 
     </section>
 
@@ -272,7 +278,7 @@ date=Tue%2C%2028%20Aug%202012%2009%3A41%3A21%20-0400
       <section title="Link relation">
 
         <t>This specification defines a new link relation type to be registered at 
-        http://www.iana.org/assignments/link-relations.</t>
+        http://www.iana.org/assignments/link-relations according to <xref target="RFC5988">RFC 5988</xref>.</t>
 
         <t>
           <list style="symbols">
@@ -390,13 +396,15 @@ date=Tue%2C%2028%20Aug%202012%2009%3A41%3A21%20-0400
 
       &RFC2617;
 
+      &RFC5988;
+
+      &RFC6415;
+
     </references>
 
     <references title="Informative References">
 
       &RFC5849;
-
-      &RFC5988;
 
     </references>
 
