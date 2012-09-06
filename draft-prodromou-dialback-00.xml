@@ -201,18 +201,11 @@
    <!-- Possibly a 'Contributors' section ... -->
 
    <section anchor="IANA" title="IANA Considerations">
-     <t>This memo includes no request to IANA.</t>
-
-     <t>All drafts are required to have an IANA considerations section (see
-     <xref target="RFC5226">Guidelines for Writing an IANA Considerations Section in RFCs</xref> for a guide). If the draft does not require IANA to do
-     anything, the section contains an explicit statement that this is the
-     case (as above). If there are no requirements for IANA, the section will
-     be removed during conversion into an RFC by the RFC Editor.</t>
+     <t></t>
    </section>
 
    <section anchor="Security" title="Security Considerations">
-     <t>All drafts are required to have a security considerations section.
-     See <xref target="RFC3552">RFC 3552</xref> for a guide.</t>
+     <t></t>
    </section>
  </middle>
 
