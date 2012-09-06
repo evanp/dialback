@@ -152,9 +152,11 @@
 
     <section title="Dialback verification endpoint">
 
-      <t>To confirm, the server makes an HTTP POST request to the dialback endpoint.</t>
+      <t>To confirm, the server makes an HTTP POST request to the
+      dialback endpoint. The request MUST have the Content-Type
+      application/x-www-url-encoded.</t>
 
-      <t>The HTTP request has the following parameters:
+      <t>The HTTP request has the following parameters.
 
       <list hangIndent="8" style="hanging">
         <t hangText="host">The host value provided in the original Authorization header.</t>
@@ -165,7 +167,14 @@
       </list>
       </t>
 
-      <t>One of "host" or "webfinger" is required. "token", "url" and "date" are required.</t>
+      <t>The request MUST include exactly one of "host" or "webfinger".</t>
+      <t>The request MUST include the "token", "url" and "date" parameters.</t>
+
+      <t>All parameters MUST be encoded in the body of the request.</t>
+
+      <t>If the token is valid, the endpoint SHOULD return a 200 OK or 204 No Content result.</t>
+
+      <t>If the token is invalid, the endpoint SHOULD return a 400 Bad Request result.</t>
 
     </section>
 
@@ -181,17 +190,27 @@
 
     </section>
 
-    <section anchor="Acknowledgements" title="Acknowledgements">
-      <t></t>
-    </section>
-
-    <!-- Possibly a 'Contributors' section ... -->
-
     <section anchor="IANA" title="IANA Considerations">
+
       <section title="Authentication scheme">
+        <t>This specification defines a new HTTP authentication
+        scheme, "Dialback", to be registered at
+        http://www.iana.org/assignments/http-authschemes.</t>
       </section>
+
       <section title="Link relation">
+
+        <t>This specification defines a new link relation type to be registered at 
+        http://www.iana.org/assignments/link-relations.</t>
+
+        <list style="symbols">
+          <t>Relation Name: dialback</t>
+          <t>Description: a dialback token verification endpoint</t>
+          <t>Reference: (this document)</t>
+        </list> 
+        
       </section>
+
     </section>
 
     <section anchor="Security" title="Security Considerations">
