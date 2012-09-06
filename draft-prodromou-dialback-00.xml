@@ -22,232 +22,215 @@
 
 <rfc category="exp" docName="draft-prodromou-dialback-00" ipr="trust200902">
 
- <!-- ***** FRONT MATTER ***** -->
+  <!-- ***** FRONT MATTER ***** -->
 
- <front>
+  <front>
 
-   <title abbrev="Dialback Authentication">HTTP Authentication: Dialback Access Authentication</title>
+    <title abbrev="Dialback Authentication">HTTP Authentication: Dialback Access Authentication</title>
 
-   <author fullname="Evan Prodromou" initials="E.S.P." role="editor"
-           surname="Prodromou">
+    <author fullname="Evan Prodromou" initials="E.S.P." role="editor"
+            surname="Prodromou">
 
-     <organization>StatusNet, Inc.</organization>
+      <organization>StatusNet, Inc.</organization>
 
-     <address>
-       <postal>
-         <street>1124 rue Marie-Anne Est #32</street>
+      <address>
+        <postal>
+          <street>1124 rue Marie-Anne Est #32</street>
 
-         <city>Montreal</city>
+          <city>Montreal</city>
 
-         <region>Quebec</region>
+          <region>Quebec</region>
 
-         <code>H2J 2B5</code>
+          <code>H2J 2B5</code>
 
-         <country>CA</country>
-       </postal>
+          <country>CA</country>
+        </postal>
 
-       <phone>+1 855-946-3675 x700</phone>
+        <phone>+1 855-946-3675 x700</phone>
 
-       <email>evan@status.net</email>
+        <email>evan@status.net</email>
 
-       <uri>http://evan.status.net/</uri>
+        <uri>http://evan.status.net/</uri>
 
-     </address>
-   </author>
+      </address>
+    </author>
 
-   <date year="2012" />
+    <date year="2012" />
 
-   <area>General</area>
+    <area>General</area>
 
-   <workgroup>Internet Engineering Task Force</workgroup>
+    <workgroup>Internet Engineering Task Force</workgroup>
 
-   <keyword>http</keyword>
-   <keyword>dialback</keyword>
-   <keyword>authentication</keyword>
-   <keyword>hostmeta</keyword>
-   <keyword>webfinger</keyword>
+    <keyword>http</keyword>
+    <keyword>dialback</keyword>
+    <keyword>authentication</keyword>
+    <keyword>hostmeta</keyword>
+    <keyword>webfinger</keyword>
 
-   <abstract>
+    <abstract>
 
-     <t>This specification defines the Dialback Access Authentication
-     Scheme. It provides a way for HTTP clients to identify an
-     Internet host or account responsible for an HTTP request, and for
-     HTTP servers to verify that identity by sending a shared secret
-     to a declared dialback endpoint.</t>
+      <t>This specification defines the Dialback Access Authentication
+      Scheme. It provides a way for HTTP clients to identify an
+      Internet host or account responsible for an HTTP request, and for
+      HTTP servers to verify that identity by sending a shared secret
+      to a declared dialback endpoint.</t>
 
-     <t>The specification defines a new HTTP authentication scheme,
-     "Dialback". It also defines a new link relation, "dialback", to
-     specify the endpoint for the dialback verification. Finally, it
-     defines the interface for the dialback endpoint.</t>
+      <t>The specification defines a new HTTP authentication scheme,
+      "Dialback". It also defines a new link relation, "dialback", to
+      specify the endpoint for the dialback verification. Finally, it
+      defines the interface for the dialback endpoint.</t>
 
-   </abstract>
+    </abstract>
 
- </front>
+  </front>
 
- <middle>
+  <middle>
 
-   <section title="Introduction">
+    <section title="Introduction">
 
-     <t><xref target="RFC2616">HTTP/1.1</xref> has an extensible
-     authentication mechanism using the "Authorization" header. <xref
-     target="RFC2617">Basic and Digest Authentication</xref> are two
-     authentication schemes for HTTP/1.1. <xref target="RFC5849">OAuth
-     1.0</xref> is another.</t>
+      <t><xref target="RFC2616">HTTP/1.1</xref> has an extensible
+      authentication mechanism using the "Authorization" header. <xref
+      target="RFC2617">Basic and Digest Authentication</xref> are two
+      authentication schemes for HTTP/1.1. <xref target="RFC5849">OAuth
+      1.0</xref> is another.</t>
 
-     <t>All of these authentication schemes assume that the HTTP
-     server is able to validate the authentication credentials. With
-     distributed publishing and social networking applications,
-     however, the security domain may be separate from the resource
-     domain. In addition, the resource and security domains may have
-     no previously-negotiated relationship.</t>
+      <t>All of these authentication schemes assume that the HTTP
+      server is able to validate the authentication credentials. With
+      distributed publishing and social networking applications,
+      however, the security domain may be separate from the resource
+      domain. In addition, the resource and security domains may have
+      no previously-negotiated relationship.</t>
 
-     <t>With dialback authentication, an HTTP client can authenticate
-     as a host or Webfinger address without creating a previous
-     relationship. The HTTP server verifies the identity using a
-     dialback endpoint specified by the host or Webfinger address.</t>
+      <t>With dialback authentication, an HTTP client can authenticate
+      as a host or Webfinger address without creating a previous
+      relationship. The HTTP server verifies the identity using a
+      dialback endpoint specified by the host or Webfinger address.</t>
 
-     <t>Because dialback authentication requires one or more
-     additional requests from server to client, its intended use is
-     for bootstrapping longer-term relationships, such as dynamic
-     registration of OAuth clients. It can also be useful for single
-     use requests.</t>
+      <t>Because dialback authentication requires one or more
+      additional requests from server to client, its intended use is
+      for bootstrapping longer-term relationships, such as dynamic
+      registration of OAuth clients. It can also be useful for single
+      use requests.</t>
 
-     <section title="Requirements Language">
-       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-       document are to be interpreted as described in <xref
-       target="RFC2119">RFC 2119</xref>.</t>
-     </section>
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref
+        target="RFC2119">RFC 2119</xref>.</t>
+      </section>
 
-   </section>
+    </section>
 
-   <section title="Authentication scheme">
+    <section title="Authentication scheme">
 
-     <t>This spec adds a new Authorization type, "Dialback".</t>
+      <t>This spec adds a new Authorization type, "Dialback".</t>
 
-     <t>The header has the following optional elements:
+      <t>The header has the following optional elements:
 
-     <list hangIndent="8" style="hanging">
-          <t hangText="host">The host authorizing the request.</t>
-          <t hangText="webfinger">The webfinger account authorizing the request.</t>
-          <t hangText="nonce">An opaque value used to confirm the request authorization</t>
-     </list>
-     </t>
- 
-     <t>Exactly one of "host" or "webfinger" is required.</t>
+      <list hangIndent="8" style="hanging">
+        <t hangText="host">The host authorizing the request.</t>
+        <t hangText="webfinger">The webfinger account authorizing the request.</t>
+        <t hangText="nonce">An opaque value used to confirm the request authorization</t>
+      </list>
+      </t>
+      
+      <t>Exactly one of "host" or "webfinger" is required.</t>
 
-     <t>"nonce" is always required.</t>
+      <t>"nonce" is always required.</t>
 
-     <section title="Replay prevention">
+      <section title="Replay prevention">
 
-       <t>To prevent replay attacks, the server has to reject the
-       request if it's already seen the same (host | webfinger, nonce,
-       date) tuple.</t>
+        <t>To prevent replay attacks, the server has to reject the
+        request if it's already seen the same (host | webfinger, nonce,
+        date) tuple.</t>
 
-       <t>To keep from having to save billions of tuples until the end
-       of time, it's reasonable to reject requests with a Date:
-       outside a fixed window. +/- 5 minutes from server time is
-       what's recommended for OAuth.</t>
+        <t>To keep from having to save billions of tuples until the end
+        of time, it's reasonable to reject requests with a Date:
+        outside a fixed window. +/- 5 minutes from server time is
+        what's recommended for OAuth.</t>
 
-     </section>
+      </section>
 
-   </section>
+    </section>
 
-   <section title="Link relation">
+    <section title="Link relation">
 
-     <t>The server receiving the request uses hostmeta (for hosts) or
-     webfinger (for webfingers) to discover a link with type
-     "dialback".</t>
+      <t>The server receiving the request uses hostmeta (for hosts) or
+      webfinger (for webfingers) to discover a link with type
+      "dialback".</t>
 
-     <t>This link is an URL that can handle dialback requests.</t>
+      <t>This link is an URL that can handle dialback requests.</t>
 
-   </section>
+    </section>
 
-   <section title="Dialback verification endpoint">
+    <section title="Dialback verification endpoint">
 
-     <t>To confirm, the server makes an HTTP POST request to the dialback endpoint.</t>
+      <t>To confirm, the server makes an HTTP POST request to the dialback endpoint.</t>
 
-     <t>The HTTP request has the following parameters:
+      <t>The HTTP request has the following parameters:
 
-     <list hangIndent="8" style="hanging">
-       <t hangText="host">The host value provided in the original Authorization header.</t>
-       <t hangText="webfinger">The webfinger value provided in the original Authorization header.</t>
-       <t hangText="nonce">The nonce provided in the original Authorization header.</t>
-       <t hangText="url">The URL that the original request was made to.</t>
-       <t hangText="date">The Date header on the original request. If there was no Date header, this should be omitted.</t>
-     </list>
-     </t>
+      <list hangIndent="8" style="hanging">
+        <t hangText="host">The host value provided in the original Authorization header.</t>
+        <t hangText="webfinger">The webfinger value provided in the original Authorization header.</t>
+        <t hangText="nonce">The nonce provided in the original Authorization header.</t>
+        <t hangText="url">The URL that the original request was made to.</t>
+        <t hangText="date">The Date header on the original request. If there was no Date header, this should be omitted.</t>
+      </list>
+      </t>
 
-     <t>One of "host" or "webfinger" is required. "nonce" and "url" are required.</t>
+      <t>One of "host" or "webfinger" is required. "nonce" and "url" are required.</t>
 
-   </section>
+    </section>
 
-   <section title="Examples">
+    <section title="Examples">
 
-   <section title="Host authentication">
+      <section title="Host authentication">
 
-   </section>
+      </section>
 
-   <section title="Webfinger authentication">
+      <section title="Webfinger authentication">
 
-   </section>
+      </section>
 
-   </section>
+    </section>
 
-   <section anchor="Acknowledgements" title="Acknowledgements">
-     <t></t>
-   </section>
+    <section anchor="Acknowledgements" title="Acknowledgements">
+      <t></t>
+    </section>
 
-   <!-- Possibly a 'Contributors' section ... -->
+    <!-- Possibly a 'Contributors' section ... -->
 
-   <section anchor="IANA" title="IANA Considerations">
-     <t></t>
-   </section>
+    <section anchor="IANA" title="IANA Considerations">
+      <t></t>
+    </section>
 
-   <section anchor="Security" title="Security Considerations">
-     <t></t>
-   </section>
- </middle>
+    <section anchor="Security" title="Security Considerations">
+      <t></t>
+    </section>
+  </middle>
 
- <!--  *****BACK MATTER ***** -->
+  <!--  *****BACK MATTER ***** -->
 
- <back>
-   <!-- References split into informative and normative -->
+  <back>
 
-   <!-- There are 2 ways to insert reference entries from the citation libraries:
-    1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
-    2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
-       (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+    <references title="Normative References">
 
-    Both are cited textually in the same manner: by using xref elements.
-    If you use the PI option, xml2rfc will, by default, try to find included files in the same
-    directory as the including file. You can also define the XML_LIBRARY environment variable
-    with a value containing a set of directories to search.  These can be either in the local
-    filing system or remote ones accessed by http (http://domain/dir/... ).-->
+      &RFC2119;
 
-   <references title="Normative References">
-     <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
-     &RFC2119;
+      &RFC2616;
 
-     &RFC2616;
+      &RFC2617;
 
-     &RFC2617;
+    </references>
 
-   </references>
+    <references title="Informative References">
 
-   <references title="Informative References">
-     <!-- Here we use entities that we defined at the beginning. -->
+      &RFC5849;
 
-     &RFC5849;
+      &RFC5988;
 
-     &RFC5988;
+    </references>
 
-     <!-- A reference written by by an organization not a person. -->
+  </back>
 
-   </references>
-
-   <section anchor="app-additional" title="Additional Stuff">
-     <t>This becomes an Appendix.</t>
-   </section>
- </back>
 </rfc>
