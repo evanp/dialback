@@ -140,14 +140,6 @@
 
       <section title="Replay prevention">
 
-        <t>To prevent replay attacks, the server MUST NOT accept a
-        request if it's already seen the same (host | webfinger, url, nonce,
-        date) tuple.</t>
-
-        <t>To keep from having to save billions of tuples until the end
-        of time, it's reasonable to reject requests with a Date:
-        outside a fixed window. +/- 5 minutes from server time is
-        what's recommended for OAuth.</t>
 
       </section>
 
@@ -201,12 +193,103 @@
     <!-- Possibly a 'Contributors' section ... -->
 
     <section anchor="IANA" title="IANA Considerations">
-      <t></t>
+      <section title="Authentication scheme">
+      </section>
+      <section title="Link relation">
+      </section>
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t></t>
+
+      <section title="Replay attacks">
+
+        <t>An attacker could capture the Authorization header of a
+        request and replay the header for another payload.</t>
+
+        <t>To prevent replay attacks, the server MUST NOT accept a
+        request if it has already seen a request with the same host or
+        webfinger, url, nonce, and date.</t>
+
+        <t>Servers MAY mitigate storage requirements by rejecting
+        requests with a Date: outside a fixed window. +/- 5 minutes
+        from server time is reasonable.</t>
+
+      </section>
+
+      <section title="Link discovery">
+
+        <t>An attacker could use DNS poisoning techniques to provide
+        links to a false dialback endpoint.</t>
+
+        <t>Clients supporting dialback SHOULD support TLS for
+        host-meta and Webfinger discovery.</t>
+
+        <t>HTTP servers SHOULD use the TLS endpoint for host-meta and
+        Webfinger. HTTP servers MAY fall back to the unencrypted
+        equivalent.</t>
+
+      </section>
+
+      <section title="Endpoint">
+
+        <t>An attacker could use DNS poisoning techniques to provide
+        false responses to requests to the dialback verification
+        endpoint.</t>
+
+        <t>HTTP clients support dialback SHOULD use TLS for dialback
+        endpoints.</t>
+
+        <t>HTTP servers SHOULD require valid certificates for dialback
+        endpoints.</t>
+
+      </section>
+
+      <section title="Confidentiality">
+
+        <t>The dialback endpoint confirms that the host or Webfinger
+        account is responsible for the HTTP request.</t>
+
+        <t>An attacker could use brute-force methods to determine if
+        the host or Webfinger account has made an HTTP request to a
+        given URL.</t>
+
+        <t>The dialback endpoint SHOULD NOT verify requests for dates
+        outside a small window around the current time (+/- five
+        minutes).</t>
+
+        <t>The dialback endpoint SHOULD use large enough tokens to
+        make brute-force attacks impractical.</t>
+
+      </section>
+
+      <section title="Data integrity">
+
+        <t>Dialback authentication does not confirm the contents of
+        the HTTP request. For example, man-in-the-middle attack could
+        replace the contents of a POST request with another payload,
+        which would be verified.</t>
+
+        <t>Servers SHOULD use TLS to prevent man-in-the-middle
+        attacks.</t>
+
+      </section>
+
+      <section title="Denial of service">
+
+        <t>Dialback authentication lets the HTTP client induce the
+        HTTP server to make additional verification requests.</t>
+
+        <t>By making requests with a host or webfinger parameter
+        referring to a third party, a malicious client can cause extra
+        HTTP requests to that third party.</t>
+
+        <t>To avoid denial-of-service attacks, HTTP servers SHOULD
+        cache the results of host-meta and Webfinger requests.</t>
+
+      </section>
+
     </section>
+
   </middle>
 
   <!--  *****BACK MATTER ***** -->
