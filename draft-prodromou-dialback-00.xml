@@ -195,11 +195,7 @@
    </section>
 
    <section anchor="Acknowledgements" title="Acknowledgements">
-     <t>This template was derived from an initial version written by Pekka
-     Savola and contributed by him to the xml2rfc project.</t>
-
-     <t>This document is part of a plan to make xml2rfc indispensable <xref
-     target="DOMINATION"></xref>.</t>
+     <t></t>
    </section>
 
    <!-- Possibly a 'Contributors' section ... -->
@@ -244,30 +240,10 @@
 
      &RFC2617;
 
-
-     <reference anchor="min_ref">
-       <!-- the following is the minimum to make xml2rfc happy -->
-
-       <front>
-         <title>Minimal Reference</title>
-
-         <author initials="authInitials" surname="authSurName">
-           <organization></organization>
-         </author>
-
-         <date year="2006" />
-       </front>
-     </reference>
    </references>
 
    <references title="Informative References">
      <!-- Here we use entities that we defined at the beginning. -->
-
-     &RFC2629;
-
-     &RFC3552;
-
-     &RFC5226;
 
      &RFC5849;
 
