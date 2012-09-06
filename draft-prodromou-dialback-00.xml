@@ -130,18 +130,13 @@
       <list hangIndent="8" style="hanging">
         <t hangText="host">The host authorizing the request.</t>
         <t hangText="webfinger">The webfinger account authorizing the request.</t>
-        <t hangText="nonce">An opaque value used to confirm the request authorization</t>
+        <t hangText="token">An opaque value used to confirm the request authorization</t>
       </list>
       </t>
       
       <t>Exactly one of "host" or "webfinger" is required.</t>
 
-      <t>"nonce" is always required.</t>
-
-      <section title="Replay prevention">
-
-
-      </section>
+      <t>"token" is always required.</t>
 
     </section>
 
@@ -164,13 +159,13 @@
       <list hangIndent="8" style="hanging">
         <t hangText="host">The host value provided in the original Authorization header.</t>
         <t hangText="webfinger">The webfinger value provided in the original Authorization header.</t>
-        <t hangText="nonce">The nonce provided in the original Authorization header.</t>
+        <t hangText="token">The token provided in the original Authorization header.</t>
         <t hangText="url">The URL that the original request was made to.</t>
         <t hangText="date">The Date header on the original request. If there was no Date header, this should be omitted.</t>
       </list>
       </t>
 
-      <t>One of "host" or "webfinger" is required. "nonce" and "url" are required.</t>
+      <t>One of "host" or "webfinger" is required. "token" and "url" are required.</t>
 
     </section>
 
@@ -208,7 +203,7 @@
 
         <t>To prevent replay attacks, the server MUST NOT accept a
         request if it has already seen a request with the same host or
-        webfinger, url, nonce, and date.</t>
+        webfinger, url, token, and date.</t>
 
         <t>Servers MAY mitigate storage requirements by rejecting
         requests with a Date: outside a fixed window. +/- 5 minutes
