@@ -10,6 +10,8 @@
 <!ENTITY RFC5849 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml">
 <!ENTITY RFC5988 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml">
 <!ENTITY RFC6415 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6415.xml">
+<!ENTITY WEBFINGER SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-jones-appsawg-webfinger-06.xml">
+<!ENTITY AUTHSCHEME SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-authscheme-registrations-04.xml">
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -151,7 +153,7 @@
       endpoint. It will have the link relation "dialback".</t>
 
       <t>For a webfinger parameter, the server SHOULD use <xref
-      target="RFC6415">Web Host Metadata</xref> to find the
+      target="I-D.jones-appsawg-webfinger">Webfinger</xref> to find the
       endpoint with the link relation "dialback".</t>
 
     </section>
@@ -271,7 +273,7 @@ date=Tue%2C%2028%20Aug%202012%2009%3A41%3A21%20-0400
 
       <section title="Authentication scheme">
         <t>This specification defines a new HTTP authentication
-        scheme, "Dialback", to be registered at
+        scheme, "Dialback", per <xref target="I-D.ietf-httpbis-authscheme-registrations">Authentication Scheme Registrations</xref> to be registered at
         http://www.iana.org/assignments/http-authschemes.</t>
       </section>
 
@@ -399,6 +401,10 @@ date=Tue%2C%2028%20Aug%202012%2009%3A41%3A21%20-0400
       &RFC5988;
 
       &RFC6415;
+
+      &WEBFINGER;
+
+      &AUTHSCHEME;
 
     </references>
 
