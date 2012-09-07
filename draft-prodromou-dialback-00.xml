@@ -28,7 +28,7 @@
 
     <title abbrev="Dialback Authentication">HTTP Authentication: Dialback Access Authentication</title>
 
-    <author fullname="Evan Prodromou" initials="E.S.P." role="editor"
+    <author fullname="Evan Prodromou" initials="E.S.P."
             surname="Prodromou">
 
       <organization>StatusNet, Inc.</organization>
@@ -57,9 +57,9 @@
 
       <t>This specification defines the Dialback Access Authentication
       Scheme. It provides a way for HTTP clients to identify an
-      Internet host or account responsible for an HTTP request, and for
-      HTTP servers to verify that identity by sending a shared secret
-      to a declared dialback endpoint.</t>
+      Internet host or account responsible for an HTTP request, and
+      for HTTP servers to verify that identity by sending a token to a
+      declared dialback endpoint.</t>
 
       <t>The specification defines a new HTTP authentication scheme,
       "Dialback". It also defines a new link relation, "dialback", to
